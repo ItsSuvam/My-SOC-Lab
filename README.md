@@ -39,3 +39,17 @@ and MITRE ATT&CK-mapped alerting. Built entirely on WSL2 - no dedicated VM host 
   active interface was eth2 (checked with `ip a`). Fixed in suricata.yaml under af-packet.
 - A custom rule in local.rules silently failed to load until it was explicitly added to
   the rule-files list in suricata.yaml (Suricata doesn't auto-include it).
+
+### Windows Endpoint (Sysmon + Wazuh Agent) — Sept 2026
+- [x] Installed Sysmon on Windows 11 host using SwiftOnSecurity's community config
+- [x] Installed Wazuh agent (name: windows-endpoint, ID: 002) via MSI, manager version v4.14.7 matched
+- [x] Fixed IPv6 loopback issue: WSL2 mirrored networking resolved `localhost` to `::1`,
+      which the manager could not accept connections on — switched `ossec.conf`
+      `<address>` to `127.0.0.1` to force IPv4, agent connected successfully
+- [x] Manually registered agent key via `manage_agents` (auto-enrollment on port 1515 failed)
+- [x] Added `<localfile>` block to collect `Microsoft-Windows-Sysmon/Operational` event channel
+- [x] Verified end-to-end: Sysmon -> Wazuh agent -> Manager -> Dashboard, confirmed via
+      `agent_control -l` (status: Active) and Threat Hunting dashboard showing live events
+      (e.g. rule 92031 "Discovery activity executed", rule 92205 "Powershell process created
+      an executable file in Windows root folder")
+- Evidence: `evidence/windows-endpoint-dashboard.png`, `evidence/windows-agent-sysmon-log.png`

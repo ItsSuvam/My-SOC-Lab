@@ -1,0 +1,8 @@
+<!-- Added to /var/ossec/etc/ossec.conf on the Wazuh agent (Ubuntu endpoint) -->
+<!-- Forwards Suricata eve.json alerts into Wazuh for correlation -->
+<ossec_config>
+  <localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.json</location>
+  </localfile>
+</ossec_config>
